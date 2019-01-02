@@ -1,0 +1,190 @@
+---
+STM32F4xx:
+  type: family
+  description: STM32F4 family from ST Microelectronics. Based on a Cortex M4F core.
+  # Byte-size of all registers in this family. May also be applied at a per-chip, per-peripheral,
+  # and per-register level.
+  register_size: 4
+  RCC:
+    # Peripherals may be defined both at the family level and at the chip level. A chip level
+    # definition will override any overlapping fields from the family level definition. This can be
+    # used to define common traits once in the family and chip specific traits in the chip. As long
+    # as the name of the peripheral is the same it will be treated as one peripheral.
+    type: peripheral
+    description: Reset and Clock Control peripheral for STM32F4xx family.
+    # "base_address" must be defined at the peripheral level (either in the family or in the chip).
+    # Except if all registers in the peripheral define "address", in which case they override the
+    # base address + offset.
+    base_address: 0x40023800
+    CR:
+      type: register
+      description: RCC clock control register
+      # Either "offset" or "address" must be defined for all registers (not both). If "address" is
+      # defined the owning peripheral's "base_address" will be ignored for that register. If
+      # "offset" is defined the owning peripheral must define "base_address".
+      offset: 0x00
+      # "reset" is optional at register level. In this case RCC_CR contains undefined reset values,
+      # so "reset" is defined in each bitset that has a valid reset value. This allows us to reset
+      # only the bitsets that have defined reset values.
+      # "reset" may not be defined in any bitset if it is defined at the register level. If "reset"
+      # is defined for the register, then a reset will just overwrite the whole register.
+
+      # "access" is optional at the register level. If it is not defined for a bitset the default
+      # register level value will be used.
+      access: rw
+      HSION:
+        type: bitset
+        offset: 0 # Required. Bit offset from the 0th bit in the register.
+        length: 1 # Required. Number of bits in this bitset.
+        reset: 0x01 # Optional, see note above.
+        access: rw # Required. May be either "r", "w", or "rw".
+        # "values" defines any values that may be used to set or compare against the value in
+        # a bitset. It also defines valid and invalid values for doing validation checks (see
+        # below).
+        #
+        # Values may be either named or unnamed. Named values may be specified by a list of
+        # name/value pairs. An unnamed range may be specified by using the special object "range"
+        # and specifying a "start" and an "end". Named values must not be mixed with an unnamed
+        # range.
+        #
+        # Any values within a bitset that are not specified are defaulted to invalid. With a
+        # special case when the "values" field is not specified, in which case all values are
+        # considered valid.
+        #
+        # Examples:
+        # ```
+        # # Named values. All unspecified values are considered invalid.
+        # values:
+        #   - named_value1: 0x01
+        #   - named_value2: 0x02
+        #   - named_value3: 0x03
+        #
+        # # Unnamed range. All values outside the range are considered invalid.
+        # values:
+        #   range:
+        #     - start: 0x01
+        #     - end: 0x0F
+        # ```
+        values:
+          - hsi_on: 0x01
+          - hsi_off: 0x00
+      HSIRDY:
+        type: bitset
+        offset: 1
+        length: 1
+        reset: hsi_ready
+        access: r
+        values:
+          - hsi_ready: 0x01
+          - hsi_not_ready: 0x00
+      HSITRIM:
+        type: bitset
+        offset: 3
+        length: 5
+        reset: 0x10
+        access: rw
+      HSICAL:
+        type: bitset
+        offset: 8
+        length: 8
+        access: r
+      HSEON:
+        type: bitset
+        offset: 16
+        length: 1
+        reset: 0
+        access: rw
+        values:
+          - hse_osc_on: 0x01
+          - hse_osc_off: 0x00
+      HSERDY:
+        type: bitset
+        offset: 17
+        length: 1
+        reset: 0
+        access: r
+        values:
+          - hse_ready: 0x01
+          - hse_not_ready: 0x00
+      HSEBYP:
+        type: bitset
+        offset: 18
+        length: 1
+        reset: 0
+        access: rw
+        values:
+          - hse_bypassed: 0x01
+          - hse_not_bypassed: 0x00
+      CSSON:
+        type: bitset
+        offset: 19
+        length: 1
+        reset: 0
+        access: rw
+        values:
+          - css_on: 0x01
+          - css_off: 0x00
+      PLLON:
+        type: bitset
+        offset: 24
+        length: 1
+        reset: 0
+        access: rw
+        values:
+          - pll_on: 0x01
+          - pll_off: 0x00
+      PLLRDY:
+        type: bitset
+        offset: 25
+        length: 1
+        reset: 0
+        access: r
+        values:
+          - pll_ready: 0x01
+          - pll_not_ready: 0x00
+      PLLI2SON:
+        type: bitset
+        offset: 26
+        length: 1
+        reset: 0
+        access: rw
+        values:
+          - plli2s_on: 0x01
+          - plli2s_off: 0x00
+      PLLI2SRDY:
+        type: bitset
+        offset: 27
+        length: 1
+        reset: 0
+        access: r
+        values:
+          - plli2s_ready: 0x01
+          - plli2s_not_ready: 0x00
+...
+
+
+
+
+
+Family
+  - Peripheral
+  - Register
+  - Chip
+
+Chip
+  - Peripheral
+  - Register
+
+Peripheral
+  - BaseAddress
+  - Register
+
+Register
+  - Address/Offset
+  - Bitset
+
+Bitset
+  - Read/Write
+  - Offset
+  - Size
+  - Values
